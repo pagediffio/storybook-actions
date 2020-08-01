@@ -1,6 +1,7 @@
 import axios from "axios";
 import { map } from "bluebird";
 import * as FormData from "form-data";
+import got from "got";
 import { createReadStream, readdirSync } from "fs";
 import { join } from "path";
 
@@ -25,7 +26,7 @@ async function uploadAssets(outputPath: string) {
       form.append("key", `${prefix}${file}`);
       form.append("file", createReadStream(sourceFile));
 
-      await axios.post(url, form);
+      await got.post(url, { body: form });
     },
     { concurrency: 5 }
   );
