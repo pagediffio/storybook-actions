@@ -65,7 +65,6 @@ export default async function generateAssets(
   writeFileSync(join(outputPath, "metadata.json"), JSON.stringify(metadata));
   await Promise.all(workers.map((worker) => worker.destroy()));
   server.close();
-  process.exit(0);
 }
 
 async function runTasks(
