@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/luin/storyqa#readme",
   "dependencies": {
-    "axios": "^0.19.2",
     "bluebird": "^3.7.2",
     "debug": "^4.1.1",
     "form-data": "^3.0.0",

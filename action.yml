@@ -1,5 +1,9 @@
 name: 'Page diff'
 description: 'Generate Storybook screenshots for visual testing'
+inputs:
+  token:
+    description: 'Pagediff token for the repo'
+    required: true
 outputs:
   screenshot-path:
     description: 'Screenshots path'

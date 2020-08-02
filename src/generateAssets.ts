@@ -12,17 +12,6 @@ import StoryBrowser from "./utils/StoryBrowser";
 import { v4 } from "uuid";
 import { join } from "path";
 
-const getGitHubEnv = () => {
-  const keys = Object.keys(process.env).filter((key) =>
-    key.startsWith("GITHUB_")
-  );
-  const env = {};
-  keys.forEach((key) => {
-    env[key] = process.env[key];
-  });
-  return env;
-};
-
 const keyForVariant = (variant: IStoryVariant) =>
   `${variant.story.id}|${variant.name}`;
 
@@ -58,7 +47,10 @@ export default async function generateAssets(
   });
 
   const metadata = {
-    env: getGitHubEnv(),
+    repo: process.env.GITHUB_REPOSITORY,
+    commit: process.env.GITHUB_SHA,
+    ref: process.env.GITHUB_REF,
+    actor: process.env.GITHUB_ACTOR,
     pages,
   };
 
