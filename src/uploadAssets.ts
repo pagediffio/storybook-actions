@@ -1,13 +1,9 @@
-import { map } from "bluebird";
 import * as FormData from "form-data";
 import got from "got";
-import { createReadStream, readdirSync } from "fs";
-import { join } from "path";
+import { createReadStream } from "fs";
 
-async function uploadAssets(outputPath: string) {
-  const {
-    body,
-  } = await got
+async function uploadAssets(file: string) {
+  const { body } = await got
     .post(
       "http://pagediff-env-1.eba-dzmczmau.us-east-2.elasticbeanstalk.com/api/screenshots",
       {
@@ -21,25 +17,15 @@ async function uploadAssets(outputPath: string) {
 
   console.log("Got data", body);
 
-  const files = readdirSync(outputPath);
+  const { url, fields, key } = body;
+  const form = new FormData();
+  Object.keys(fields).forEach((key) => {
+    form.append(key, fields[key]);
+  });
+  form.append("key", key);
+  form.append("file", createReadStream(file));
 
-  await map(
-    files,
-    async (file) => {
-      const { url, fields, prefix } = body;
-      const form = new FormData();
-      Object.keys(fields).forEach((key) => {
-        form.append(key, fields[key]);
-      });
-      const sourceFile = join(outputPath, file);
-      console.log(`Uploading file ${sourceFile}`);
-      form.append("key", `${prefix}${file}`);
-      form.append("file", createReadStream(sourceFile));
-
-      await got.post(url, { body: form });
-    },
-    { concurrency: 5 }
-  );
+  await got.post(url, { body: form });
 }
 
 export default uploadAssets;
