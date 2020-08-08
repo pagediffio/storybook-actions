@@ -3,10 +3,6 @@ import got from "got";
 import { createReadStream } from "fs";
 
 async function uploadAssets(file: string) {
-  console.log("Sent data", {
-    accessToken: process.env.INPUT_TOKEN,
-    commit: process.env.GITHUB_SHA,
-  });
   const { body } = await got.post(
     "http://pagediff-env-1.eba-dzmczmau.us-east-2.elasticbeanstalk.com/api/screenshots",
     {
@@ -19,12 +15,11 @@ async function uploadAssets(file: string) {
 
   console.log("Got data", body);
 
-  const { url, fields, key } = JSON.parse(body);
+  const { url, fields } = JSON.parse(body);
   const form = new FormData();
   Object.keys(fields).forEach((key) => {
     form.append(key, fields[key]);
   });
-  form.append("key", key);
   form.append("file", createReadStream(file));
 
   await got.post(url, { body: form });
