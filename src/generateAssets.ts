@@ -39,6 +39,7 @@ export default async function generateAssets(
     const { html, screenshot, viewport } = data[key];
     return {
       key,
+      componentKey: `${variant.story.kind}/${variant.story.name}`,
       html,
       viewport,
       screenshot,
