@@ -21,7 +21,7 @@ echo "Generating screenshots from $STORY_OUTPUT to $SCREENSHOT_OUTPUT"
 node /pagediff/dist/index.js generate $STORY_OUTPUT $SCREENSHOT_OUTPUT
 
 echo "Archiving screenshots..."
-zip -r -j $STORY_OUTPUT/screenshots.zip $SCREENSHOT_OUTPUT/*
+tar -czvf $STORY_OUTPUT/screenshots.zip -C $SCREENSHOT_OUTPUT .
 
 echo "Uploading to Pagediff..."
 node /pagediff/dist/index.js upload $STORY_OUTPUT/screenshots.zip
