@@ -1,10 +1,10 @@
 import * as FormData from "form-data";
-import got from "got";
 import { createReadStream } from "fs";
+import got from "got";
 
 async function uploadAssets(file: string) {
   const { body } = await got.post(
-    "http://pagediff-env-1.eba-dzmczmau.us-east-2.elasticbeanstalk.com/api/screenshots",
+    "http://pagediff-env-1.eba-dzmczmau.us-east-2.elasticbeanstalk.com/api/artifacts",
     {
       json: {
         accessToken: process.env.INPUT_TOKEN,

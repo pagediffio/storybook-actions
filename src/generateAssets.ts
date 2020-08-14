@@ -1,4 +1,8 @@
 import { writeFileSync } from "fs";
+import got from "got";
+import { join } from "path";
+import { v4 } from "uuid";
+import { getMergeBase } from "./git";
 import { IStoryVariant } from "./types";
 import { createExecutionService } from "./utils/asyncUtils";
 import Debug from "./utils/Debug";
@@ -9,8 +13,6 @@ import setCurrentStory from "./utils/setCurrentStory";
 import setViewport, { DEFAULT_VIEWPORT } from "./utils/setViewport";
 import StaticServer from "./utils/StaticServer";
 import StoryBrowser from "./utils/StoryBrowser";
-import { v4 } from "uuid";
-import { join } from "path";
 
 const keyForVariant = (variant: IStoryVariant) =>
   `${variant.story.id}|${variant.name}`;
@@ -57,6 +59,25 @@ export default async function generateAssets(
   };
 
   writeFileSync(join(outputPath, "metadata.json"), JSON.stringify(metadata));
+
+  const branch = process.env.GITHUB_REF?.slice(11);
+  if (!branch) {
+    throw new Error("Cannot get branch name");
+  }
+  const {
+    body,
+  } = await got.post(
+    "http://pagediff-env-1.eba-dzmczmau.us-east-2.elasticbeanstalk.com/api/settings",
+    { json: { accessToken: process.env.INPUT_TOKEN } }
+  );
+
+  const { branch: base } = JSON.parse(body);
+  const commits = JSON.stringify(
+    await getMergeBase(base, branch, process.env.GITHUB_SHA || "")
+  );
+  console.log("Commits", commits);
+  writeFileSync(join(outputPath, "commits.json"), commits);
+
   await Promise.all(workers.map((worker) => worker.destroy()));
   server.close();
 }
