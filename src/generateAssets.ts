@@ -50,6 +50,7 @@ export default async function generateAssets(
   const metadata = {
     repo: process.env.GITHUB_REPOSITORY,
     commit: process.env.GITHUB_SHA,
+    message: process.env.COMMIT_MSG,
     ref: process.env.GITHUB_REF,
     actor: process.env.GITHUB_ACTOR,
     pages,

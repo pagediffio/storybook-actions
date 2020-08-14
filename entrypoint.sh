@@ -18,7 +18,7 @@ echo `mkdir -p $SCREENSHOT_OUTPUT`
 mkdir -p $SCREENSHOT_OUTPUT
 
 echo "Generating screenshots from $STORY_OUTPUT to $SCREENSHOT_OUTPUT"
-node /pagediff/dist/index.js generate $STORY_OUTPUT $SCREENSHOT_OUTPUT
+COMMIT_MSG=$(git log -1 HEAD --pretty=format:%s) node /pagediff/dist/index.js generate $STORY_OUTPUT $SCREENSHOT_OUTPUT
 
 echo "Archiving screenshots..."
 tar -czvf $STORY_OUTPUT/screenshots.zip -C $SCREENSHOT_OUTPUT .
